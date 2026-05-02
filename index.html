@@ -477,6 +477,76 @@ body {
   font-weight:600; letter-spacing:0.2em; margin-bottom:0.4rem;
 }
 
+/* ── ビームエフェクト ── */
+.hero {
+  position: relative;
+}
+
+.beam-canvas {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.beam-line {
+  position: absolute;
+  top: -100%;
+  width: 1.5px;
+  height: 80%;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(196,98,58,0.5) 40%,
+    rgba(196,98,58,0.8) 60%,
+    rgba(196,98,58,0.3) 80%,
+    transparent 100%
+  );
+  border-radius: 1px;
+  animation: beamFall linear infinite;
+}
+
+@keyframes beamFall {
+  0%   { top: -80%; opacity: 0; }
+  10%  { opacity: 1; }
+  85%  { opacity: 0.7; }
+  100% { top: 110%; opacity: 0; }
+}
+
+.hero-grid {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  background-image:
+    linear-gradient(rgba(196,98,58,0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(196,98,58,0.07) 1px, transparent 1px);
+  background-size: 40px 40px;
+  mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 100%);
+}
+
+.hero-glow {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 300px; height: 300px;
+  background: radial-gradient(ellipse, rgba(196,98,58,0.12) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+  animation: glowPulse 4s ease-in-out infinite;
+}
+
+@keyframes glowPulse {
+  0%, 100% { opacity: 0.6; transform: translate(-50%,-50%) scale(1); }
+  50%       { opacity: 1;   transform: translate(-50%,-50%) scale(1.15); }
+}
+
+.hero > * { position: relative; z-index: 1; }
+
 /* ── スクロールリビール ── */
 .reveal {
   opacity: 0;
@@ -588,6 +658,9 @@ body {
 <div id="tab-katachi" class="tab-content active">
 
   <section class="hero">
+    <div class="hero-grid"></div>
+    <div class="hero-glow"></div>
+    <div class="beam-canvas" id="beam-canvas"></div>
     <div class="hero-en">KATACHI</div>
     <div class="hero-tagline">あなたのスキを、カタチにする。</div>
     <div class="hero-divider"></div>
@@ -958,6 +1031,28 @@ function showTab(name, btn) {
     setTimeout(playChat, 300);
   }
 }
+
+// ── ビームライン生成 ──
+(function() {
+  const canvas = document.getElementById('beam-canvas');
+  if (!canvas) return;
+  const count = 6;
+  for (let i = 0; i < count; i++) {
+    const beam = document.createElement('div');
+    beam.className = 'beam-line';
+    const left = 10 + Math.random() * 80;
+    const duration = 2.5 + Math.random() * 3;
+    const delay = Math.random() * 4;
+    const opacity = 0.4 + Math.random() * 0.6;
+    beam.style.cssText = `
+      left: ${left}%;
+      animation-duration: ${duration}s;
+      animation-delay: -${delay}s;
+      opacity: ${opacity};
+    `;
+    canvas.appendChild(beam);
+  }
+})();
 
 // ── スクロールリビール & カウントアップ ──
 function startCount(el) {
