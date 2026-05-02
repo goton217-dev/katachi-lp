@@ -476,6 +476,103 @@ body {
   font-size:0.95rem; color:var(--terra-d);
   font-weight:600; letter-spacing:0.2em; margin-bottom:0.4rem;
 }
+
+/* ── スクロールリビール ── */
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.75s cubic-bezier(0.16,1,0.3,1),
+              transform 0.75s cubic-bezier(0.16,1,0.3,1);
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── インパクトセクション ── */
+.impact {
+  padding: 3.5rem 2rem 1.5rem;
+  max-width: 680px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.impact-title {
+  font-family: "Hiragino Mincho ProN","Yu Mincho",serif;
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  color: var(--terra);
+  margin-bottom: 1.8rem;
+}
+
+.impact-grid {
+  display: flex;
+  justify-content: center;
+  gap: 1.2rem;
+  flex-wrap: wrap;
+}
+
+.impact-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  background: var(--white);
+  border-radius: 14px;
+  padding: 1.4rem 1.5rem 1.1rem;
+  box-shadow: 0 2px 12px rgba(42,26,14,0.07);
+  min-width: 132px;
+}
+
+.impact-row {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
+.impact-before {
+  font-family: "Hiragino Mincho ProN","Yu Mincho",serif;
+  font-size: 0.78rem;
+  color: var(--muted);
+  text-decoration: line-through;
+  text-decoration-color: var(--terra-l);
+}
+
+.impact-arrow {
+  font-size: 0.65rem;
+  color: var(--terra-l);
+}
+
+.impact-after {
+  font-family: "Hiragino Mincho ProN","Yu Mincho",serif;
+  font-size: 1.9rem;
+  font-weight: 600;
+  color: var(--terra-d);
+  line-height: 1;
+}
+
+.impact-unit {
+  font-family: "Hiragino Mincho ProN","Yu Mincho",serif;
+  font-size: 0.7rem;
+  color: var(--terra);
+  font-weight: 600;
+  margin-left: -0.1rem;
+}
+
+.impact-label {
+  font-size: 0.6rem;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+}
+
+.impact-auto {
+  font-family: "Hiragino Mincho ProN","Yu Mincho",serif;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--terra-d);
+  line-height: 1;
+}
 </style>
 </head>
 <body>
@@ -498,6 +595,39 @@ body {
       やりたくないことも、やりたいことも。<br>
       AIがあなたの強い味方として、一緒にカタチにする。<br>
       道具だけど、優しく寄り添ってくれる存在として。
+    </div>
+  </section>
+
+  <!-- ── インパクト ── -->
+  <section class="impact">
+    <div class="impact-title">KATACHI ができること</div>
+    <div class="impact-grid">
+      <div class="impact-item reveal">
+        <div class="impact-row">
+          <span class="impact-before">7時間</span>
+          <span class="impact-arrow">→</span>
+          <span class="impact-after"><span class="count" data-target="30">0</span></span>
+          <span class="impact-unit">分</span>
+        </div>
+        <div class="impact-label">資料作成</div>
+      </div>
+      <div class="impact-item reveal">
+        <div class="impact-row">
+          <span class="impact-before">3日</span>
+          <span class="impact-arrow">→</span>
+          <span class="impact-after"><span class="count" data-target="10">0</span></span>
+          <span class="impact-unit">分</span>
+        </div>
+        <div class="impact-label">LP制作</div>
+      </div>
+      <div class="impact-item reveal">
+        <div class="impact-row">
+          <span class="impact-before">手作業</span>
+          <span class="impact-arrow">→</span>
+          <span class="impact-auto">自動化</span>
+        </div>
+        <div class="impact-label">毎月のレポート</div>
+      </div>
     </div>
   </section>
 
@@ -828,6 +958,42 @@ function showTab(name, btn) {
     setTimeout(playChat, 300);
   }
 }
+
+// ── スクロールリビール & カウントアップ ──
+function startCount(el) {
+  if (el.dataset.counted) return;
+  el.dataset.counted = '1';
+  const target = Number(el.dataset.target);
+  if (!target) return;
+  let current = 0;
+  const step = Math.max(1, Math.ceil(target / 28));
+  const timer = setInterval(() => {
+    current = Math.min(current + step, target);
+    el.textContent = current;
+    if (current >= target) clearInterval(timer);
+  }, 45);
+}
+
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (!entry.isIntersecting) return;
+    const delay = Number(entry.target.dataset.revealDelay || 0);
+    setTimeout(() => {
+      entry.target.classList.add('visible');
+      entry.target.querySelectorAll('.count').forEach(startCount);
+    }, delay);
+    revealObserver.unobserve(entry.target);
+  });
+}, { threshold: 0.18 });
+
+function initReveal() {
+  document.querySelectorAll('.reveal').forEach((el, i) => {
+    el.dataset.revealDelay = i * 130;
+    revealObserver.observe(el);
+  });
+}
+
+initReveal();
 
 // 初回ロード時（KATACHIタブがデフォルト表示）
 setTimeout(triggerBelief, 2800);
