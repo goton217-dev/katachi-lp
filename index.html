@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KATACHI — あなたのスキを、カタチにする。</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root {
+  --cream:      #faf7f0;
+  --cream-dark: #f0e6d2;
+  --terra:      #c4623a;
+  --terra-l:    #e8a882;
+  --terra-d:    #8b3e1e;
+  --green:      #5a7a45;
+  --amber:      #b8821a;
+  --sage:       #6a7a60;
+  --brown:      #7a5a42;
+  --sienna:     #8b4513;
+  --text:       #2a1a0e;
+  --muted:      #9a8070;
+  --faint:      #d4c4b0;
+  --white:      #ffffff;
+}
+
+body {
+  font-family:"Hiragino Kaku Gothic ProN","Hiragino Sans",-apple-system,sans-serif;
+  background-color: var(--cream);
+  background-image: radial-gradient(var(--faint) 0.6px, transparent 0.6px);
+  background-size: 20px 20px;
+  color: var(--text);
+  min-height: 100vh;
+}
+
+/* ── タブナビ ── */
+.tab-nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(250,247,240,0.92);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--faint);
+  display: flex;
+  justify-content: center;
+  gap: 0;
+  padding: 0 2rem;
+}
+
+.tab-btn {
+  font-family:"Hiragino Mincho ProN","Yu Mincho",serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  padding: 1rem 2rem;
+  border: none;
+  background: none;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.tab-btn:hover { color: var(--terra); }
+
+.tab-btn.active {
+  color: var(--terra-d);
+  border-bottom-color: var(--terra);
+}
+
+/* ── タブコンテンツ ── */
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+/* ── HERO ── */
+.hero {
+  padding: 7rem 2rem 5rem;
+  text-align: center;
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+.hero-en {
+  font-family:"Hiragino Mincho ProN","Yu Mincho",Georgia,serif;
+  font-size: 4.5rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  color: var(--terra-d);
+  line-height: 1;
+  margin-bottom: 1.4rem;
+}
+
+.hero-tagline {
+  font-family:"Hiragino Mincho ProN","Yu Mincho",serif;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--text);
+  letter-spacing: 0.08em;
+  margin-bottom: 2.5rem;
+}
+
+.hero-divider {
+  width: 36px; height: 1.5px;
+  background: var(--terra-l);
+  margin: 0 auto 2.5rem;
+}
+
+.hero-lead {
+  font-size: 0.88rem;
+  line-height: 2.1;
+  color: var(--muted);
+  letter-spacing: 0.04em;
+}
+
+/* ── 信念 ── */
+.belief {
+  background-color: var(--cream-dark);
+  padding: 5rem 2rem;
+  margin-top: 0;
+}
+
+.belief-inner {
+  max-width: 600px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.belief-text {
+  font-family:"Hiragino Mincho ProN","Yu Mincho",serif;
+  font-size: 1rem;
+  line-height: 2.6;
+  color: var(--text);
+  letter-spacing: 0.06em;
+}
+
+.belief-text em { font-style:normal; color: var(--terra); }
+
+/* ── SECTIONラッパー ── */
+.section {
+  padding: 4rem 2rem 5rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.section-tag {
+  display: inline-block;
+  font-size: 0.58rem; font-weight:800; letter-spacing:0.2em;
+  color: var(--terra);
+  border: 1px solid var(--terra-l);
+  padding: 0.22rem 0.75rem;
+  border-radius: 100px;
+  margin-bottom: 0.9rem;
+}
+
+.section-heading {
+  font-family:"Hiragino Mincho ProN","Yu Mincho",serif;
+  font-size: 1.4rem; font-weight:600; color: var(--text);
+  letter-spacing:0.06em; margin-bottom:0.5rem;
+}
+
+.section-desc {
+  font-size:0.78rem; color: var(--muted);
+  line-height:1.9; margin-bottom:2.2rem;
+}
+
+/* ── 組織図 ── */
+.org-top {
+  display:flex; flex-direction:column; align-items:center;
+  margin-bottom:2rem; gap:0.5rem;
+}
+
+.org-ceo {
+  background: var(--terra-d); color: var(--white);
+  padding:0.65rem 2rem; border-radius:8px;
+  font-size:0.78rem; font-weight:800; letter-spacing:0.1em;
+}
+
+.org-ceo-tag {
+  font-size:0.56rem; opacity:0.6;
+  margin-right:0.5rem; letter-spacing:0.15em;
+}
+
+.org-vline { width:1.5px; height:22px; background: var(--faint); }
+
+.org-sec {
+  border:1.5px solid var(--terra-l); color: var(--terra-d);
+  padding:0.55rem 1.6rem; border-radius:8px;
+  font-size:0.76rem; font-weight:800; background: var(--white);
+}
+
+.org-sec-sub {
+  font-size:0.56rem; color: var(--muted);
+  font-weight:400; margin-left:0.5rem;
+}
+
+.org-bridge {
+  width:100%; max-width:700px;
+  height:1.5px; background: var(--faint);
+  margin:0 auto 1.8rem;
+}
+
+/* 部署グリッド */
+.dept-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
+  gap:1rem;
+}
+
+.dept-card {
+  background: var(--white); border-radius:12px;
+  box-shadow:0 2px 10px rgba(42,26,14,0.07);
+  overflow:hidden;
+}
+
+/* 部署ヘッダー B スタイル */
+.dept-head {
+  margin:0.85rem 0.85rem 0.6rem;
+  border-radius:6px; padding:0.25rem 0.65rem;
+  font-size:0.58rem; font-weight:800;
+  letter-spacing:0.12em; text-align:center;
+  border:1.5px solid; background:transparent;
+}
+
+.dept-body { padding:0 0.85rem 0.85rem; display:flex; flex-direction:column; gap:0.35rem; }
+
+/* 社員 A スタイル */
+.staff { border-left:3px solid; padding:0.38rem 0.65rem; border-radius:0 5px 5px 0; }
+.staff-name { font-size:0.7rem; font-weight:700; color: var(--text); }
+.staff-role { font-size:0.54rem; color: var(--muted); margin-top:0.08rem; }
+
+/* 部署カラー */
+.d-strategy .dept-head,.d-strategy .staff { border-color:var(--sienna); }
+.d-strategy .dept-head { color:var(--sienna); }
+
+.d-creative .dept-head,.d-creative .staff { border-color:var(--terra); }
+.d-creative .dept-head { color:var(--terra); }
+
+.d-hr .dept-head,.d-hr .staff { border-color:var(--green); }
+.d-hr .dept-head { color:var(--green); }
+
+.d-quality .dept-head,.d-quality .staff { border-color:var(--amber); }
+.d-quality .dept-head { color:var(--amber); }
+
+.d-admin .dept-head,.d-admin .staff { border-color:var(--sage); }
+.d-admin .dept-head { color:var(--sage); }
+
+.d-it .dept-head,.d-it .staff { border-color:var(--brown); }
+.d-it .dept-head { color:var(--brown); }
+
+/* ── チャットアニメ ── */
+@keyframes bubbleIn {
+  from { opacity:0; transform:translateY(10px) scale(0.96); }
+  to   { opacity:1; transform:translateY(0)    scale(1); }
+}
+
+@keyframes typingBounce {
+  0%,60%,100% { transform:translateY(0); opacity:0.4; }
+  30%         { transform:translateY(-5px); opacity:1; }
+}
+
+@keyframes flowReveal {
+  from { opacity:0; transform:translateY(12px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+
+.chat-msg { opacity:0; }
+.chat-msg.show { animation: bubbleIn 0.42s cubic-bezier(0.34,1.4,0.64,1) forwards; }
+
+.typing-row { display:none; align-items:flex-end; gap:0.55rem; }
+.typing-row.show { display:flex; }
+
+.typing-dots {
+  display:flex; gap:5px;
+  padding:10px 14px;
+  background:var(--cream-dark);
+  border-radius:11px; border-bottom-left-radius:3px;
+}
+
+.typing-dots span {
+  width:5px; height:5px; border-radius:50%;
+  background:var(--muted);
+  animation: typingBounce 1s ease-in-out infinite;
+}
+.typing-dots span:nth-child(2) { animation-delay:0.18s; }
+.typing-dots span:nth-child(3) { animation-delay:0.36s; }
+
+.prem-flow { opacity:1; }
+
+.f-item {
+  opacity:0;
+  transform:translateX(-10px);
+  transition: opacity 0.45s ease, transform 0.45s ease;
+}
+.f-item.show {
+  opacity:1;
+  transform:translateX(0);
+}
+
+/* ── ワークフロー ── */
+.premise-card {
+  background:var(--white); border-radius:16px;
+  box-shadow:0 2px 14px rgba(42,26,14,0.08);
+  overflow:hidden; margin-bottom:2rem;
+}
+
+.chat { padding:1.8rem 2rem; border-bottom:1px solid var(--cream-dark); display:flex; flex-direction:column; gap:0.9rem; }
+
+.bubble-row { display:flex; align-items:flex-end; gap:0.55rem; }
+.bubble-row.user { flex-direction:row-reverse; }
+
+.avatar {
+  width:30px; height:30px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:0.56rem; font-weight:800; flex-shrink:0; letter-spacing:0;
+}
+.av-ceo { background:var(--terra-d); color:var(--white); }
+.av-sec { background:var(--cream-dark); color:var(--terra-d); }
+
+.bubble-wrap { display:flex; flex-direction:column; gap:0.15rem; }
+.bubble-name { font-size:0.54rem; color:var(--faint); }
+.bubble-name.r { text-align:right; }
+
+.bubble { max-width:260px; padding:0.6rem 0.9rem; border-radius:11px; font-size:0.7rem; line-height:1.7; }
+.b-ceo { background:var(--terra-d); color:var(--white); border-bottom-right-radius:3px; }
+.b-sec { background:var(--cream-dark); color:var(--text); border-bottom-left-radius:3px; }
+
+.prem-flow {
+  padding:1.8rem 2rem;
+  display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:0;
+}
+
+.f-node { display:flex; flex-direction:column; align-items:center; gap:0.3rem; min-width:86px; }
+.f-icon { width:46px; height:46px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.2rem; background:var(--cream-dark); }
+.f-label { font-size:0.64rem; font-weight:800; color:var(--text); }
+.f-sub { font-size:0.52rem; color:var(--muted); text-align:center; line-height:1.5; }
+
+.f-arr { display:flex; flex-direction:column; align-items:center; gap:0.18rem; padding:0 0.35rem; padding-bottom:1.2rem; }
+.f-arr-body { display:flex; align-items:center; }
+.f-line { width:28px; height:1.5px; background:var(--faint); }
+.f-tip { width:0; height:0; border-top:4px solid transparent; border-bottom:4px solid transparent; border-left:5px solid var(--faint); margin-left:-2px; }
+.f-lbl { font-size:0.5rem; color:var(--faint); white-space:nowrap; }
+
+/* 事例 */
+.cases { display:flex; flex-direction:column; gap:1.4rem; }
+
+.case-card {
+  background:var(--white); border-radius:12px;
+  box-shadow:0 2px 10px rgba(42,26,14,0.07);
+  overflow:hidden;
+}
+
+/* B スタイル：ヘッダー帯なし */
+.case-head {
+  padding:1.1rem 1.4rem 0.7rem;
+  display:flex; align-items:center; gap:0.7rem;
+  border-bottom:1px solid var(--cream-dark);
+}
+
+.case-tag-pill {
+  font-size:0.56rem; font-weight:800; letter-spacing:0.15em;
+  color:var(--white); padding:0.2rem 0.65rem;
+  border-radius:100px; flex-shrink:0;
+}
+
+.case-title {
+  font-family:"Hiragino Mincho ProN","Yu Mincho",serif;
+  font-size:0.95rem; font-weight:600; color:var(--text);
+  letter-spacing:0.04em;
+}
+
+.case-body { padding:1.1rem 1.4rem; display:flex; align-items:center; flex-wrap:wrap; gap:0.5rem; }
+
+.step { border-left:3px solid; background:var(--cream); padding:0.48rem 0.8rem; border-radius:0 6px 6px 0; min-width:95px; }
+.step-name { font-size:0.68rem; font-weight:700; color:var(--text); }
+.step-desc { font-size:0.54rem; color:var(--muted); margin-top:0.08rem; }
+
+.step-human {
+  border:1.5px solid var(--terra-l); background:#fff8f5;
+  padding:0.48rem 0.8rem; border-radius:6px; min-width:82px; text-align:center;
+}
+.step-human-name { font-size:0.68rem; font-weight:700; color:var(--terra-d); }
+.step-human-desc { font-size:0.54rem; color:var(--terra-l); margin-top:0.08rem; }
+
+.goal { border:1.5px dashed var(--faint); padding:0.48rem 0.8rem; border-radius:6px; min-width:68px; text-align:center; }
+.goal-icon { font-size:0.95rem; }
+.goal-name { font-size:0.64rem; font-weight:800; color:var(--text); margin-top:0.1rem; }
+
+.wf-arr { font-size:0.85rem; color:var(--faint); flex-shrink:0; }
+
+/* 事例カラー */
+.c-lp  .case-tag-pill { background:var(--sienna); }
+.c-lp  .step          { border-color:var(--sienna); }
+
+.c-data .case-tag-pill { background:var(--brown); }
+.c-data .step          { border-color:var(--brown); }
+
+.c-hr  .case-tag-pill  { background:var(--green); }
+.c-hr  .step           { border-color:var(--green); }
+
+/* 締めコピー */
+.wf-closing {
+  text-align:center; margin-top:2rem;
+  padding:1.6rem 2rem; background:var(--white);
+  border-radius:12px; box-shadow:0 2px 10px rgba(42,26,14,0.07);
+}
+
+.wf-closing-text {
+  font-family:"Hiragino Mincho ProN","Yu Mincho",serif;
+  font-size:0.92rem; line-height:2.2;
+  color:var(--text); letter-spacing:0.06em;
+}
+
+.wf-closing-text em { font-style:normal; color:var(--terra); }
+
+/* ── アニメーション ── */
+@keyframes letterReveal {
+  from { opacity:0; letter-spacing:0.7em; }
+  to   { opacity:1; letter-spacing:0.2em; }
+}
+
+@keyframes maskSlide {
+  from { clip-path: inset(0 100% 0 0); opacity:1; }
+  to   { clip-path: inset(0 0% 0 0);   opacity:1; }
+}
+
+@keyframes expandCenter {
+  from { transform: scaleX(0); opacity:0; }
+  to   { transform: scaleX(1); opacity:1; }
+}
+
+@keyframes floatUp {
+  from { opacity:0; transform:translateY(14px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+
+.hero-en {
+  animation: letterReveal 1.6s cubic-bezier(0.16,1,0.3,1) both;
+}
+
+.hero-tagline {
+  opacity: 0;
+  animation: maskSlide 1s cubic-bezier(0.16,1,0.3,1) 0.9s both;
+}
+
+.hero-divider {
+  transform-origin: center;
+  animation: expandCenter 0.8s ease 1.5s both;
+}
+
+.hero-lead {
+  animation: floatUp 1s ease 1.8s both;
+}
+
+/* 信念ライン */
+.belief-line {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 0.9s cubic-bezier(0.16,1,0.3,1),
+              transform 0.9s cubic-bezier(0.16,1,0.3,1);
+  display: block;
+}
+
+.belief-line.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* フッター */
+.footer {
+  text-align:center; padding:2.5rem 2rem;
+  font-size:0.58rem; color:var(--faint); letter-spacing:0.12em;
+}
+
+.footer-logo {
+  font-family:"Hiragino Mincho ProN","Yu Mincho",serif;
+  font-size:0.95rem; color:var(--terra-d);
+  font-weight:600; letter-spacing:0.2em; margin-bottom:0.4rem;
+}
+</style>
+</head>
+<body>
+
+<!-- ── タブナビ ── -->
+<nav class="tab-nav">
+  <button class="tab-btn active" onclick="showTab('katachi',this)">KATACHI</button>
+  <button class="tab-btn" onclick="showTab('team',this)">AI社員</button>
+  <button class="tab-btn" onclick="showTab('workflow',this)">ワークフロー</button>
+</nav>
+
+<!-- ── TAB 1: KATACHI ── -->
+<div id="tab-katachi" class="tab-content active">
+
+  <section class="hero">
+    <div class="hero-en">KATACHI</div>
+    <div class="hero-tagline">あなたのスキを、カタチにする。</div>
+    <div class="hero-divider"></div>
+    <div class="hero-lead">
+      やりたくないことも、やりたいことも。<br>
+      AIがあなたの強い味方として、一緒にカタチにする。<br>
+      道具だけど、優しく寄り添ってくれる存在として。
+    </div>
+  </section>
+
+  <section class="belief">
+    <div class="belief-inner">
+      <div class="belief-text">
+        <span class="belief-line">人の幸福度は、<em>体験と感動</em>で決まると思っている。</span>
+        <span class="belief-line">だからAIには、体験も感動も渡さない。</span>
+        <span class="belief-line">その時間を、あなたに返すために形にする。</span>
+        <span class="belief-line" style="margin-top:1.4em">&nbsp;</span>
+        <span class="belief-line"><em>楽しく生きる。</em>それが、KATACHIの目指す世界。</span>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="footer-logo">KATACHI</div>
+    Total 18 members — 2026.04.28
+  </footer>
+
+</div>
+
+<!-- ── TAB 2: AI社員 ── -->
+<div id="tab-team" class="tab-content">
+  <div class="section">
+    <div><span class="section-tag">ORGANIZATION</span></div>
+    <div class="section-heading">AI社員チーム</div>
+    <div class="section-desc">KATACHIを動かす18名のAI社員。それぞれの専門領域で、あなたのカタチをつくる。</div>
+
+    <div class="org-top">
+      <div class="org-ceo"><span class="org-ceo-tag">CEO</span>Okamatsu</div>
+      <div class="org-vline"></div>
+      <div class="org-sec">秘書さん<span class="org-sec-sub">参謀 / Chief of Staff</span></div>
+    </div>
+    <div class="org-bridge"></div>
+
+    <div class="dept-grid">
+
+      <div class="dept-card d-strategy">
+        <div class="dept-head">戦略部</div>
+        <div class="dept-body">
+          <div class="staff"><div class="staff-name">コトラーさん</div><div class="staff-role">マーケ参謀</div></div>
+        </div>
+      </div>
+
+      <div class="dept-card d-creative">
+        <div class="dept-head">クリエイティブ部</div>
+        <div class="dept-body">
+          <div class="staff"><div class="staff-name">LP職人さん</div><div class="staff-role">LP・Web制作</div></div>
+          <div class="staff"><div class="staff-name">プレゼンターさん</div><div class="staff-role">スライド制作</div></div>
+          <div class="staff"><div class="staff-name">藤井さん</div><div class="staff-role">ライティング</div></div>
+          <div class="staff"><div class="staff-name">アプリ開発さん</div><div class="staff-role">アプリ開発</div></div>
+        </div>
+      </div>
+
+      <div class="dept-card d-hr">
+        <div class="dept-head">人事・組織部</div>
+        <div class="dept-body">
+          <div class="staff"><div class="staff-name">組織設計さん</div><div class="staff-role">採用・組織設計</div></div>
+          <div class="staff"><div class="staff-name">暗黙知発掘さん</div><div class="staff-role">ナレッジ経営</div></div>
+        </div>
+      </div>
+
+      <div class="dept-card d-quality">
+        <div class="dept-head">品質管理部</div>
+        <div class="dept-body">
+          <div class="staff"><div class="staff-name">自己満検問さん</div><div class="staff-role">顧客目線検証</div></div>
+          <div class="staff"><div class="staff-name">QCさん</div><div class="staff-role">プロセス品質</div></div>
+          <div class="staff"><div class="staff-name">守衛さん</div><div class="staff-role">情報流出チェック</div></div>
+        </div>
+      </div>
+
+      <div class="dept-card d-admin">
+        <div class="dept-head">総務部</div>
+        <div class="dept-body">
+          <div class="staff"><div class="staff-name">フローワーカーさん</div><div class="staff-role">ファイル整理</div></div>
+          <div class="staff"><div class="staff-name">議事録さん</div><div class="staff-role">会議記録</div></div>
+          <div class="staff"><div class="staff-name">Meetさん</div><div class="staff-role">録画議事録</div></div>
+          <div class="staff"><div class="staff-name">日報さん</div><div class="staff-role">日次報告</div></div>
+          <div class="staff"><div class="staff-name">週報さん</div><div class="staff-role">週次報告</div></div>
+        </div>
+      </div>
+
+      <div class="dept-card d-it">
+        <div class="dept-head">IT・データ部</div>
+        <div class="dept-body">
+          <div class="staff"><div class="staff-name">GASさん</div><div class="staff-role">Google自動化</div></div>
+          <div class="staff"><div class="staff-name">解析さん</div><div class="staff-role">データ分析・可視化</div></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-logo">KATACHI</div>
+    Total 18 members — 2026.04.28
+  </footer>
+</div>
+
+<!-- ── TAB 3: ワークフロー ── -->
+<div id="tab-workflow" class="tab-content">
+  <div class="section">
+    <div><span class="section-tag">WORKFLOW</span></div>
+    <div class="section-heading">仕事の流れ</div>
+    <div class="section-desc">すべては秘書への一言から始まる。あとはAI社員が動く。</div>
+
+    <div class="premise-card">
+      <div class="chat" id="chat-box">
+
+        <div class="bubble-row user chat-msg" id="cm1">
+          <div class="avatar av-ceo">CEO</div>
+          <div class="bubble-wrap">
+            <div class="bubble-name r">CEO</div>
+            <div class="bubble b-ceo">新しいサービスのLPを作りたい。<br>どこから始めればいいかな？</div>
+          </div>
+        </div>
+
+        <div class="typing-row" id="typing1">
+          <div class="avatar av-sec">秘</div>
+          <div class="typing-dots"><span></span><span></span><span></span></div>
+        </div>
+
+        <div class="bubble-row chat-msg" id="cm2">
+          <div class="avatar av-sec">秘</div>
+          <div class="bubble-wrap">
+            <div class="bubble-name">秘書さん</div>
+            <div class="bubble b-sec">誰に届けたいですか？<br>マーケ戦略から整理しますか、<br>それともデザインから入りますか？</div>
+          </div>
+        </div>
+
+        <div class="bubble-row user chat-msg" id="cm3">
+          <div class="avatar av-ceo">CEO</div>
+          <div class="bubble-wrap">
+            <div class="bubble-name r">CEO</div>
+            <div class="bubble b-ceo">戦略から考えたい。</div>
+          </div>
+        </div>
+
+        <div class="typing-row" id="typing2">
+          <div class="avatar av-sec">秘</div>
+          <div class="typing-dots"><span></span><span></span><span></span></div>
+        </div>
+
+        <div class="bubble-row chat-msg" id="cm4">
+          <div class="avatar av-sec">秘</div>
+          <div class="bubble-wrap">
+            <div class="bubble-name">秘書さん</div>
+            <div class="bubble b-sec">了解です。コトラーさんに振ります。<br>ペルソナ設計から始めましょう。</div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="prem-flow">
+        <div class="f-node f-item" id="fn1">
+          <div class="f-icon">👤</div>
+          <div class="f-label">CEO</div>
+          <div class="f-sub">課題・依頼<br>を持ち込む</div>
+        </div>
+        <div class="f-arr f-item" id="fa1"><div class="f-arr-body"><div class="f-line"></div><div class="f-tip"></div></div><div class="f-lbl">投げかける</div></div>
+        <div class="f-node f-item" id="fn2">
+          <div class="f-icon">🗂️</div>
+          <div class="f-label">秘書さん</div>
+          <div class="f-sub">ヒアリング<br>整理・判断</div>
+        </div>
+        <div class="f-arr f-item" id="fa2"><div class="f-arr-body"><div class="f-line"></div><div class="f-tip"></div></div><div class="f-lbl">振り分ける</div></div>
+        <div class="f-node f-item" id="fn3">
+          <div class="f-icon">⚡</div>
+          <div class="f-label">AI社員</div>
+          <div class="f-sub">専門スキルで<br>実行する</div>
+        </div>
+        <div class="f-arr f-item" id="fa3"><div class="f-arr-body"><div class="f-line"></div><div class="f-tip"></div></div><div class="f-lbl">届ける</div></div>
+        <div class="f-node f-item" id="fn4">
+          <div class="f-icon">✅</div>
+          <div class="f-label">完成</div>
+          <div class="f-sub">LP・資料<br>分析・稼働</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cases">
+
+      <div class="case-card c-lp">
+        <div class="case-head">
+          <span class="case-tag-pill">CASE 01</span>
+          <span class="case-title">LP・Webサイト制作</span>
+        </div>
+        <div class="case-body">
+          <div class="step"><div class="step-name">コトラーさん</div><div class="step-desc">戦略・ペルソナ設計</div></div>
+          <div class="wf-arr">→</div>
+          <div class="step"><div class="step-name">LP職人さん</div><div class="step-desc">HTML制作</div></div>
+          <div class="wf-arr">→</div>
+          <div class="step"><div class="step-name">守衛さん</div><div class="step-desc">情報流出チェック</div></div>
+          <div class="wf-arr">→</div>
+          <div class="step-human"><div class="step-human-name">人が確認</div><div class="step-human-desc">魂を込める</div></div>
+          <div class="wf-arr">→</div>
+          <div class="goal"><div class="goal-icon">🌐</div><div class="goal-name">公開</div></div>
+        </div>
+      </div>
+
+      <div class="case-card c-data">
+        <div class="case-head">
+          <span class="case-tag-pill">CASE 02</span>
+          <span class="case-title">データ分析 → 提言</span>
+        </div>
+        <div class="case-body">
+          <div class="step"><div class="step-name">解析さん</div><div class="step-desc">データ収集・可視化</div></div>
+          <div class="wf-arr">→</div>
+          <div class="step"><div class="step-name">プレゼンターさん</div><div class="step-desc">スライド化</div></div>
+          <div class="wf-arr">→</div>
+          <div class="step"><div class="step-name">守衛さん</div><div class="step-desc">公開前確認</div></div>
+          <div class="wf-arr">→</div>
+          <div class="step-human"><div class="step-human-name">人が確認</div><div class="step-human-desc">魂を込める</div></div>
+          <div class="wf-arr">→</div>
+          <div class="goal"><div class="goal-icon">📊</div><div class="goal-name">共有</div></div>
+        </div>
+      </div>
+
+      <div class="case-card c-hr">
+        <div class="case-head">
+          <span class="case-tag-pill">CASE 03</span>
+          <span class="case-title">新AI社員の採用</span>
+        </div>
+        <div class="case-body">
+          <div class="step"><div class="step-name">組織設計さん</div><div class="step-desc">穴の発見・役割定義</div></div>
+          <div class="wf-arr">→</div>
+          <div class="step"><div class="step-name">暗黙知発掘さん</div><div class="step-desc">スキル設計</div></div>
+          <div class="wf-arr">→</div>
+          <div class="step"><div class="step-name">秘書さん</div><div class="step-desc">チーム組み込み</div></div>
+          <div class="wf-arr">→</div>
+          <div class="step-human"><div class="step-human-name">人が確認</div><div class="step-human-desc">魂を込める</div></div>
+          <div class="wf-arr">→</div>
+          <div class="goal"><div class="goal-icon">🤖</div><div class="goal-name">稼働</div></div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="wf-closing">
+      <div class="wf-closing-text">
+        最後は人が確認し、<br>
+        想いを魂として<em>カタチ</em>に込める。
+      </div>
+    </div>
+
+  </div>
+
+  <footer class="footer">
+    <div class="footer-logo">KATACHI</div>
+    Total 18 members — 2026.04.28
+  </footer>
+</div>
+
+<script>
+// ── チャット再生 ──
+function playChat() {
+  const ids = ['cm1','cm2','cm3','cm4'];
+  const t1 = document.getElementById('typing1');
+  const t2 = document.getElementById('typing2');
+  const flow = document.querySelector('.prem-flow');
+
+  // リセット
+  ids.forEach(id => {
+    const el = document.getElementById(id);
+    el.classList.remove('show');
+    el.style.opacity = '0';
+  });
+  t1.classList.remove('show');
+  t2.classList.remove('show');
+  ['fn1','fa1','fn2','fa2','fn3','fa3','fn4'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.remove('show');
+  });
+
+  const show = id => {
+    const el = document.getElementById(id);
+    el.classList.add('show');
+  };
+
+  const seq = [
+    [400,   () => show('cm1')],
+    [1100,  () => t1.classList.add('show')],
+    [2300,  () => { t1.classList.remove('show'); show('cm2'); }],
+    [3100,  () => show('cm3')],
+    [3800,  () => t2.classList.add('show')],
+    [5000,  () => { t2.classList.remove('show'); show('cm4'); }],
+  ];
+
+  seq.forEach(([delay, fn]) => setTimeout(fn, delay));
+
+  // フロー図を左から順に流す
+  const flowIds = ['fn1','fa1','fn2','fa2','fn3','fa3','fn4'];
+  flowIds.forEach((id, i) => {
+    setTimeout(() => {
+      const el = document.getElementById(id);
+      if (el) el.classList.add('show');
+    }, 5900 + i * 280);
+  });
+}
+
+let beliefDone = false;
+
+function triggerBelief() {
+  if (beliefDone) return;
+  const lines = document.querySelectorAll('.belief-line');
+  if (!lines.length) return;
+  beliefDone = true;
+  lines.forEach((line, i) => {
+    setTimeout(() => line.classList.add('visible'), 300 + i * 280);
+  });
+}
+
+function showTab(name, btn) {
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  btn.classList.add('active');
+  window.scrollTo(0, 0);
+
+  if (name === 'katachi') {
+    beliefDone = false;
+    document.querySelectorAll('.belief-line').forEach(el => el.classList.remove('visible'));
+    setTimeout(triggerBelief, 2800);
+  }
+
+  if (name === 'workflow') {
+    setTimeout(playChat, 300);
+  }
+}
+
+// 初回ロード時（KATACHIタブがデフォルト表示）
+setTimeout(triggerBelief, 2800);
+
+// スクロールでも発火
+window.addEventListener('scroll', () => {
+  const belief = document.querySelector('.belief-inner');
+  if (!belief) return;
+  const rect = belief.getBoundingClientRect();
+  if (rect.top < window.innerHeight * 0.85) triggerBelief();
+}, { passive: true });
+</script>
+
+</body>
+</html>
