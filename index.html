@@ -397,6 +397,65 @@ body {
 .c-hr  .case-tag-pill  { background:var(--green); }
 .c-hr  .step           { border-color:var(--green); }
 
+/* ── チャット結果 ── */
+.chat-result {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding: 1.6rem 2rem;
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.8s cubic-bezier(0.16,1,0.3,1),
+              transform 0.8s cubic-bezier(0.16,1,0.3,1);
+}
+
+.chat-result.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.cr-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  background: var(--cream);
+  border-radius: 12px;
+  padding: 1rem 1.2rem 0.8rem;
+  min-width: 110px;
+}
+
+.cr-before {
+  font-size: 0.6rem;
+  color: var(--muted);
+  text-decoration: line-through;
+  text-decoration-color: var(--terra-l);
+}
+
+.cr-arrow {
+  font-size: 0.6rem;
+  color: var(--terra-l);
+}
+
+.cr-after {
+  font-family: "Hiragino Mincho ProN","Yu Mincho",serif;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--terra-d);
+  line-height: 1;
+}
+
+.cr-auto {
+  font-size: 1rem;
+}
+
+.cr-label {
+  font-size: 0.56rem;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+}
+
 /* 締めコピー */
 .wf-closing {
   text-align:center; margin-top:2rem;
@@ -870,6 +929,57 @@ body {
           </div>
         </div>
 
+        <div class="typing-row" id="typing3">
+          <div class="avatar av-sec">秘</div>
+          <div class="typing-dots"><span></span><span></span><span></span></div>
+        </div>
+
+        <div class="bubble-row chat-msg" id="cm5">
+          <div class="avatar av-sec">秘</div>
+          <div class="bubble-wrap">
+            <div class="bubble-name">秘書さん</div>
+            <div class="bubble b-sec">✅ LPが完成しました。<br>ご確認をお願いします。</div>
+          </div>
+        </div>
+
+        <div class="bubble-row user chat-msg" id="cm6">
+          <div class="avatar av-ceo">CEO</div>
+          <div class="bubble-wrap">
+            <div class="bubble-name r">CEO</div>
+            <div class="bubble b-ceo">早い。何分かかった？</div>
+          </div>
+        </div>
+
+        <div class="bubble-row chat-msg" id="cm7">
+          <div class="avatar av-sec">秘</div>
+          <div class="bubble-wrap">
+            <div class="bubble-name">秘書さん</div>
+            <div class="bubble b-sec"><strong>14分</strong>です。<br>従来なら3日かかる作業でした。</div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ビフォーアフター -->
+      <div class="chat-result" id="chat-result">
+        <div class="cr-item">
+          <div class="cr-before">従来 3日</div>
+          <div class="cr-arrow">→</div>
+          <div class="cr-after"><span class="cr-num">14</span>分</div>
+          <div class="cr-label">LP制作</div>
+        </div>
+        <div class="cr-item">
+          <div class="cr-before">従来 7時間</div>
+          <div class="cr-arrow">→</div>
+          <div class="cr-after"><span class="cr-num">30</span>分</div>
+          <div class="cr-label">資料作成</div>
+        </div>
+        <div class="cr-item">
+          <div class="cr-before">毎月 手作業</div>
+          <div class="cr-arrow">→</div>
+          <div class="cr-after cr-auto">自動化</div>
+          <div class="cr-label">レポート</div>
+        </div>
       </div>
 
       <div class="prem-flow">
@@ -981,11 +1091,13 @@ function playChat() {
   const flow = document.querySelector('.prem-flow');
 
   // リセット
-  ids.forEach(id => {
+  const allMsgs = ['cm1','cm2','cm3','cm4','cm5','cm6','cm7'];
+  allMsgs.forEach(id => {
     const el = document.getElementById(id);
-    el.classList.remove('show');
-    el.style.opacity = '0';
+    if (el) { el.classList.remove('show'); el.style.opacity = '0'; }
   });
+  const result2 = document.getElementById('chat-result');
+  if (result2) result2.classList.remove('show');
   t1.classList.remove('show');
   t2.classList.remove('show');
   ['fn1','fa1','fn2','fa2','fn3','fa3','fn4'].forEach(id => {
@@ -998,6 +1110,9 @@ function playChat() {
     el.classList.add('show');
   };
 
+  const t3 = document.getElementById('typing3');
+  const result = document.getElementById('chat-result');
+
   const seq = [
     [400,   () => show('cm1')],
     [1100,  () => t1.classList.add('show')],
@@ -1005,6 +1120,11 @@ function playChat() {
     [3100,  () => show('cm3')],
     [3800,  () => t2.classList.add('show')],
     [5000,  () => { t2.classList.remove('show'); show('cm4'); }],
+    [6200,  () => t3.classList.add('show')],
+    [7600,  () => { t3.classList.remove('show'); show('cm5'); }],
+    [8400,  () => show('cm6')],
+    [9200,  () => show('cm7')],
+    [10200, () => { if (result) result.classList.add('show'); }],
   ];
 
   seq.forEach(([delay, fn]) => setTimeout(fn, delay));
