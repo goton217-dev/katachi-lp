@@ -764,7 +764,7 @@ body {
         <div class="impact-row">
           <span class="impact-before">3日</span>
           <span class="impact-arrow">→</span>
-          <span class="impact-after"><span class="count" data-target="10">0</span></span>
+          <span class="impact-after"><span class="count" data-target="14">0</span></span>
           <span class="impact-unit">分</span>
         </div>
         <div class="impact-label">LP制作</div>
@@ -1129,13 +1129,13 @@ function playChat() {
 
   seq.forEach(([delay, fn]) => setTimeout(fn, delay));
 
-  // フロー図を左から順に流す
+  // フロー図をchat-result（数字）と同期して表示
   const flowIds = ['fn1','fa1','fn2','fa2','fn3','fa3','fn4'];
   flowIds.forEach((id, i) => {
     setTimeout(() => {
       const el = document.getElementById(id);
       if (el) el.classList.add('show');
-    }, 5900 + i * 280);
+    }, 10200 + i * 200);
   });
 }
 
